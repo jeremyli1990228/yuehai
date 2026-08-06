@@ -3,30 +3,57 @@ import { Search, RefreshCw, Download, ChevronLeft, ChevronRight } from 'lucide-r
 
 interface WeightRecord {
   id: number
-  time: string
+  orderNo: string
+  date: string
+  area: string
+  inTime: string
+  outTime: string
   plateNumber: string
-  weightResult: number
+  status: '待复称' | '已打印'
   fee: number
-  operator: string
+  grossWeight: number | null
+  emptyWeight: number | null
+  netWeight: number | null
+  printCount: number
+  lastPrintTime: string | null
 }
 
 const recordsData: WeightRecord[] = [
-  { id: 1, time: '2026-08-06 14:32:18', plateNumber: '粤L78872', weightResult: 12690, fee: 50, operator: '张三' },
-  { id: 2, time: '2026-08-06 13:15:42', plateNumber: '粤BCH7899', weightResult: 8520, fee: 50, operator: '李四' },
-  { id: 3, time: '2026-08-06 11:28:06', plateNumber: '粤A12345', weightResult: 15340, fee: 50, operator: '王五' },
-  { id: 4, time: '2026-08-06 10:05:33', plateNumber: '粤B67890', weightResult: 6780, fee: 50, operator: '张三' },
-  { id: 5, time: '2026-08-06 09:18:47', plateNumber: '粤C24680', weightResult: 22100, fee: 50, operator: '李四' },
-  { id: 6, time: '2026-08-05 17:42:15', plateNumber: '粤L78872', weightResult: 11250, fee: 50, operator: '王五' },
-  { id: 7, time: '2026-08-05 16:30:22', plateNumber: '粤D13579', weightResult: 9340, fee: 50, operator: '张三' },
-  { id: 8, time: '2026-08-05 15:12:08', plateNumber: '粤BCH7899', weightResult: 7890, fee: 50, operator: '李四' },
-  { id: 9, time: '2026-08-05 14:22:36', plateNumber: '粤E86420', weightResult: 18560, fee: 50, operator: '王五' },
-  { id: 10, time: '2026-08-05 13:45:19', plateNumber: '粤F24681', weightResult: 5670, fee: 50, operator: '张三' },
+  { id: 1, orderNo: '2608060012', date: '2026-08-06', area: '5栋发货', inTime: '13:26:18', outTime: '-', plateNumber: '粤ZYS56港', status: '待复称', fee: 50, grossWeight: 9890, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
+  { id: 2, orderNo: '2608060011', date: '2026-08-06', area: '5栋发货', inTime: '13:17:22', outTime: '-', plateNumber: '粤ZZD43港', status: '待复称', fee: 50, grossWeight: 20300, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
+  { id: 3, orderNo: '2608060010', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '13:14:35', outTime: '-', plateNumber: '粤L78872', status: '待复称', fee: 50, grossWeight: 15190, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
+  { id: 4, orderNo: '2608060008', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '12:58:19', outTime: '13:12:27', plateNumber: '粤L78872', status: '已打印', fee: 50, grossWeight: 15190, emptyWeight: 14410, netWeight: 780, printCount: 3, lastPrintTime: '2026-08-06 13:16:32' },
+  { id: 5, orderNo: '2608060009', date: '2026-08-06', area: '5栋发货', inTime: '12:59:17', outTime: '-', plateNumber: '粤BCS4856', status: '待复称', fee: 50, grossWeight: 4430, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
+  { id: 6, orderNo: '2608060005', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '11:56:06', outTime: '12:55:33', plateNumber: '粤L78872', status: '已打印', fee: 50, grossWeight: 14410, emptyWeight: 12690, netWeight: 1720, printCount: 2, lastPrintTime: '2026-08-06 12:58:14' },
+  { id: 7, orderNo: '2608060007', date: '2026-08-06', area: '5栋发货', inTime: '12:45:56', outTime: '-', plateNumber: '粤AC54673', status: '待复称', fee: 50, grossWeight: 3780, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
+  { id: 8, orderNo: '2608060006', date: '2026-08-06', area: '5栋发货', inTime: '12:31:52', outTime: '-', plateNumber: '粤BQG940', status: '待复称', fee: 50, grossWeight: 9300, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
+  { id: 9, orderNo: '2608060004', date: '2026-08-06', area: '5栋发货', inTime: '11:33:50', outTime: '-', plateNumber: '粤B55MW3', status: '待复称', fee: 50, grossWeight: 4110, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
+  { id: 10, orderNo: '2608060003', date: '2026-08-06', area: '5栋发货', inTime: '11:27:02', outTime: '-', plateNumber: '粤BMT611', status: '待复称', fee: 50, grossWeight: 10350, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
+  { id: 11, orderNo: '2608060002', date: '2026-08-06', area: '5栋发货', inTime: '09:56:06', outTime: '10:12:05', plateNumber: '粤BHQ324', status: '已打印', fee: 50, grossWeight: 14340, emptyWeight: 10880, netWeight: 3460, printCount: 1, lastPrintTime: '2026-08-06 10:13:00' },
+  { id: 12, orderNo: '2608060001', date: '2026-08-06', area: '5栋发货', inTime: '07:54:14', outTime: '08:56:16', plateNumber: '粤BDU730', status: '已打印', fee: 50, grossWeight: 10820, emptyWeight: 7810, netWeight: 3010, printCount: 1, lastPrintTime: '2026-08-06 08:57:20' },
+  { id: 13, orderNo: '2608050040', date: '2026-08-05', area: '5栋发货', inTime: '23:44:56', outTime: '23:58:58', plateNumber: '粤BGF010', status: '已打印', fee: 50, grossWeight: 9670, emptyWeight: 9630, netWeight: 40, printCount: 1, lastPrintTime: '2026-08-05 23:59:00' },
+  { id: 14, orderNo: '2608050039', date: '2026-08-05', area: '5栋发货', inTime: '21:36:17', outTime: '23:10:20', plateNumber: '粤BEC272', status: '已打印', fee: 50, grossWeight: 22630, emptyWeight: 16610, netWeight: 6020, printCount: 1, lastPrintTime: '2026-08-05 23:11:00' },
+  { id: 15, orderNo: '2608050038', date: '2026-08-05', area: '5栋发货', inTime: '20:23:20', outTime: '21:20:06', plateNumber: '粤ZZ80港', status: '已打印', fee: 50, grossWeight: 12560, emptyWeight: 10250, netWeight: 2310, printCount: 1, lastPrintTime: '2026-08-05 21:21:00' },
+  { id: 16, orderNo: '2608050034', date: '2026-08-05', area: '5栋发货', inTime: '19:12:04', outTime: '20:50:19', plateNumber: '粤ZYS56港', status: '已打印', fee: 50, grossWeight: 15190, emptyWeight: 13980, netWeight: 1210, printCount: 1, lastPrintTime: '2026-08-05 20:51:00' },
+  { id: 17, orderNo: '2608050037', date: '2026-08-05', area: '5栋发货', inTime: '20:21:03', outTime: '20:49:34', plateNumber: '粤BW861D', status: '已打印', fee: 50, grossWeight: 4870, emptyWeight: 3880, netWeight: 990, printCount: 1, lastPrintTime: '2026-08-05 20:50:00' },
+  { id: 18, orderNo: '2608050033', date: '2026-08-05', area: '5栋发货', inTime: '19:08:53', outTime: '20:44:57', plateNumber: '粤ZYN78港', status: '已打印', fee: 50, grossWeight: 10500, emptyWeight: 9970, netWeight: 530, printCount: 1, lastPrintTime: '2026-08-05 20:45:00' },
 ]
 
 export default function Records() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
-  const total = 1255
+  const total = 26578
+
+  const getStatusClass = (status: string) => {
+    switch (status) {
+      case '已打印':
+        return 'bg-green-50 text-green-600 border border-green-200'
+      case '待复称':
+        return 'bg-orange-50 text-orange-500 border border-orange-200'
+      default:
+        return 'bg-gray-50 text-gray-600 border border-gray-200'
+    }
+  }
 
   return (
     <div>
@@ -46,25 +73,33 @@ export default function Records() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600">称重时间</label>
+            <label className="text-sm text-gray-600">状态</label>
+            <select className="border border-gray-300 rounded px-3 py-1.5 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">请选择</option>
+              <option value="printed">已打印</option>
+              <option value="pending">待复称</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">到访区域</label>
+            <select className="border border-gray-300 rounded px-3 py-1.5 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">请选择</option>
+              <option value="5">5栋发货</option>
+              <option value="3">3栋昕诺飞</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">日期</label>
             <input
               type="text"
               placeholder="开始日期"
-              className="border border-gray-300 rounded px-3 py-1.5 text-sm w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded px-3 py-1.5 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <span className="text-gray-400">-</span>
             <input
               type="text"
               placeholder="结束日期"
-              className="border border-gray-300 rounded px-3 py-1.5 text-sm w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600">操作员</label>
-            <input
-              type="text"
-              placeholder="请输入"
-              className="border border-gray-300 rounded px-3 py-1.5 text-sm w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded px-3 py-1.5 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="flex-1 flex justify-end gap-2">
@@ -87,51 +122,74 @@ export default function Records() {
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[1400px]">
             <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">序号</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    称重时间
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
+              <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">序号</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">单号<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    车牌号
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">日期<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    称重结果 (KG)
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">到访区域</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">入厂时间<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    费用 (元)
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">出厂时间<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    操作员
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">车牌号<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">状态<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">收费<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">总重<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">空重<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">净重<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">打印次数<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">最后一次打印时间<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">操作</th>
               </tr>
             </thead>
             <tbody>
               {recordsData.map((row) => (
                 <tr key={row.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.id}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.time}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.plateNumber}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.weightResult.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.fee}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.operator}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.id}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.orderNo}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.date}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.area}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.inTime}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.outTime}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.plateNumber}</td>
+                  <td className="px-4 py-3 text-sm whitespace-nowrap">
+                    <span className={`px-2 py-0.5 rounded text-xs ${getStatusClass(row.status)}`}>
+                      {row.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.fee}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.grossWeight?.toLocaleString() ?? '-'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.emptyWeight ?? '-'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.netWeight ?? '-'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.printCount}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.lastPrintTime ?? '-'}</td>
+                  <td className="px-4 py-3 text-sm whitespace-nowrap">
+                    <button className="text-blue-500 hover:text-blue-600 text-sm">打印</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -140,7 +198,7 @@ export default function Records() {
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-          <span className="text-sm text-gray-500">共 {total} 条</span>
+          <span className="text-sm text-gray-500">共 {total.toLocaleString()} 条</span>
           <div className="flex items-center gap-2">
             <button className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-50" disabled={currentPage === 1}>
               <ChevronLeft size={16} />
@@ -148,8 +206,11 @@ export default function Records() {
             <button className="w-8 h-8 bg-blue-600 text-white rounded text-sm">1</button>
             <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">2</button>
             <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">3</button>
+            <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">4</button>
+            <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">5</button>
+            <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">6</button>
             <button className="text-gray-400 text-sm">...</button>
-            <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">63</button>
+            <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">1329</button>
             <button className="p-1 text-gray-400 hover:text-gray-600">
               <ChevronRight size={16} />
             </button>

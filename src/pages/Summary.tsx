@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Search, RefreshCw, Download, ChevronLeft, ChevronRight } from 'lucide-react'
 
-interface SummaryRecord {
+interface DateSummaryRecord {
   id: number
   date: string
   vehicleCount: number
@@ -11,7 +11,17 @@ interface SummaryRecord {
   totalWeight: number
 }
 
-const summaryData: SummaryRecord[] = [
+interface VehicleSummaryRecord {
+  id: number
+  plateNumber: string
+  weighCount: number
+  totalWeight: number
+  totalFee: number
+  printCount: number
+  reprintCount: number
+}
+
+const dateSummaryData: DateSummaryRecord[] = [
   { id: 1, date: '2026-08-06', vehicleCount: 2, totalFee: 100, printCount: 2, reprintCount: 0, totalWeight: 25160 },
   { id: 2, date: '2026-08-05', vehicleCount: 38, totalFee: 1900, printCount: 38, reprintCount: 0, totalWeight: 441860 },
   { id: 3, date: '2026-08-04', vehicleCount: 37, totalFee: 1850, printCount: 41, reprintCount: 4, totalWeight: 500480 },
@@ -30,11 +40,30 @@ const summaryData: SummaryRecord[] = [
   { id: 16, date: '2026-07-21', vehicleCount: 53, totalFee: 2650, printCount: 53, reprintCount: 0, totalWeight: 684880 },
 ]
 
+const vehicleSummaryData: VehicleSummaryRecord[] = [
+  { id: 1, plateNumber: '黑MD2269', weighCount: 1, totalWeight: 27930, totalFee: 50, printCount: 1, reprintCount: 0 },
+  { id: 2, plateNumber: '黑DC73N6', weighCount: 1, totalWeight: 3970, totalFee: 50, printCount: 1, reprintCount: 0 },
+  { id: 3, plateNumber: '黑AQ9X67', weighCount: 3, totalWeight: 14500, totalFee: 150, printCount: 4, reprintCount: 1 },
+  { id: 4, plateNumber: '黑AN1V33', weighCount: 1, totalWeight: 4060, totalFee: 50, printCount: 1, reprintCount: 0 },
+  { id: 5, plateNumber: '黑AM8G53', weighCount: 3, totalWeight: 14560, totalFee: 150, printCount: 3, reprintCount: 0 },
+  { id: 6, plateNumber: '黑A3X98T', weighCount: 3, totalWeight: 14410, totalFee: 150, printCount: 3, reprintCount: 0 },
+  { id: 7, plateNumber: '鲁YC7360', weighCount: 1, totalWeight: 23880, totalFee: 50, printCount: 1, reprintCount: 0 },
+  { id: 8, plateNumber: '鲁WTV376', weighCount: 2, totalWeight: 11090, totalFee: 100, printCount: 2, reprintCount: 0 },
+  { id: 9, plateNumber: '鲁WMQ299', weighCount: 1, totalWeight: 5240, totalFee: 50, printCount: 1, reprintCount: 0 },
+  { id: 10, plateNumber: '鲁WJC532', weighCount: 1, totalWeight: 5700, totalFee: 50, printCount: 1, reprintCount: 0 },
+  { id: 11, plateNumber: '鲁WC7877', weighCount: 1, totalWeight: 6480, totalFee: 50, printCount: 1, reprintCount: 0 },
+  { id: 12, plateNumber: '鲁WBD669', weighCount: 2, totalWeight: 11690, totalFee: 100, printCount: 2, reprintCount: 0 },
+  { id: 13, plateNumber: '鲁VW3C37', weighCount: 7, totalWeight: 35340, totalFee: 350, printCount: 7, reprintCount: 0 },
+  { id: 14, plateNumber: '鲁VL8808', weighCount: 1, totalWeight: 27550, totalFee: 50, printCount: 1, reprintCount: 0 },
+  { id: 15, plateNumber: '鲁VL6638', weighCount: 1, totalWeight: 16910, totalFee: 50, printCount: 0, reprintCount: 0 },
+  { id: 16, plateNumber: '鲁VF1P77', weighCount: 1, totalWeight: 5100, totalFee: 50, printCount: 1, reprintCount: 0 },
+]
+
 export default function Summary() {
   const [activeTab, setActiveTab] = useState<'date' | 'vehicle'>('date')
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
-  const total = 500
+  const total = activeTab === 'date' ? 500 : 5689
 
   return (
     <div>
@@ -70,7 +99,7 @@ export default function Summary() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600">日期</label>
+            <label className="text-sm text-gray-600">{activeTab === 'date' ? '日期' : '日期'}</label>
             <input
               type="text"
               placeholder="开始日期"
@@ -83,6 +112,16 @@ export default function Summary() {
               className="border border-gray-300 rounded px-3 py-1.5 text-sm w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          {activeTab === 'vehicle' && (
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-gray-600">车牌号</label>
+              <input
+                type="text"
+                placeholder="请输入"
+                className="border border-gray-300 rounded px-3 py-1.5 text-sm w-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          )}
           <div className="flex-1 flex justify-end gap-2">
             <button className="px-4 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors flex items-center gap-1">
               <Search size={14} />
@@ -103,69 +142,90 @@ export default function Summary() {
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">序号</div>
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    日期
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    称重车辆数
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    总收费
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    打印次数
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    重新打印申请次数
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
-                  <div className="flex items-center gap-1">
-                    称重总重量
-                    <span className="text-gray-400 text-xs">⇅</span>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {summaryData.map((row) => (
-                <tr key={row.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.id}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.date}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.vehicleCount}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.totalFee}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.printCount}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.reprintCount}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{row.totalWeight.toLocaleString()}</td>
+          {activeTab === 'date' ? (
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">序号</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">日期<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">称重车辆数<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">总收费<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">打印次数<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">重新打印申请次数<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">称重总重量<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {dateSummaryData.map((row) => (
+                  <tr key={row.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.id}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.date}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.vehicleCount}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.totalFee}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.printCount}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.reprintCount}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.totalWeight.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">序号</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">车牌号<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">称重次数<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">称重总重量<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">总收费<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">打印次数<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-600">
+                    <div className="flex items-center gap-1">重新打印申请次数<span className="text-gray-400 text-xs">⇅</span></div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {vehicleSummaryData.map((row) => (
+                  <tr key={row.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.id}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.plateNumber}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.weighCount}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.totalWeight.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.totalFee}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.printCount}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{row.reprintCount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Pagination */}
         <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-          <span className="text-sm text-gray-500">共 {total} 条</span>
+          <span className="text-sm text-gray-500">共 {total.toLocaleString()} 条</span>
           <div className="flex items-center gap-2">
             <button className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-50" disabled={currentPage === 1}>
               <ChevronLeft size={16} />
@@ -177,7 +237,7 @@ export default function Summary() {
             <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">5</button>
             <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">6</button>
             <button className="text-gray-400 text-sm">...</button>
-            <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">25</button>
+            <button className="w-8 h-8 text-gray-600 rounded text-sm hover:bg-gray-100">{activeTab === 'vehicle' ? '285' : '25'}</button>
             <button className="p-1 text-gray-400 hover:text-gray-600">
               <ChevronRight size={16} />
             </button>
