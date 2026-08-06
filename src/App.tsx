@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
@@ -7,11 +7,9 @@ import PrintApplication from './pages/PrintApplication'
 import Summary from './pages/Summary'
 import Records from './pages/Records'
 
-const basename = import.meta.env.BASE_URL
-
 function App() {
   return (
-    <Router basename={basename}>
+    <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
