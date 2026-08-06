@@ -7,9 +7,11 @@ import PrintApplication from './pages/PrintApplication'
 import Summary from './pages/Summary'
 import Records from './pages/Records'
 
+const basename = import.meta.env.BASE_URL
+
 function App() {
   return (
-    <Router>
+    <Router basename={basename}>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
