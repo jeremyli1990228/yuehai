@@ -5,6 +5,7 @@ export default function Configuration() {
   const [feeAmount, setFeeAmount] = useState('50.00')
   const [autoPrint, setAutoPrint] = useState(true)
   const [approvalType, setApprovalType] = useState('none')
+  const [toleranceRange, setToleranceRange] = useState('500')
 
   const approvalOptions = [
     { value: 'none', label: '无需审批' },
@@ -65,7 +66,7 @@ export default function Configuration() {
         </div>
 
         {/* 打印申请流程设置 */}
-        <div>
+        <div className="mb-8">
           <h3 className="text-base font-medium text-gray-700 mb-4 border-l-3 border-blue-500 pl-3">
             打印申请流程设置
           </h3>
@@ -83,6 +84,26 @@ export default function Configuration() {
                   </option>
                 ))}
               </select>
+            </div>
+          </div>
+        </div>
+
+        {/* 核验配置 */}
+        <div>
+          <h3 className="text-base font-medium text-gray-700 mb-4 border-l-3 border-blue-500 pl-3">
+            核验配置
+          </h3>
+          <div className="pl-3">
+            <div className="flex items-center gap-4">
+              <label className="text-sm text-gray-600 w-64">实际重量与预估重量差值范围</label>
+              <span className="text-sm text-gray-400">±</span>
+              <input
+                type="text"
+                value={toleranceRange}
+                onChange={(e) => setToleranceRange(e.target.value.replace(/[^0-9.]/g, ''))}
+                className="border border-gray-300 rounded px-3 py-1.5 text-sm w-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-600">kg</span>
             </div>
           </div>
         </div>

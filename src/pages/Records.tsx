@@ -14,29 +14,30 @@ interface WeightRecord {
   grossWeight: number | null
   emptyWeight: number | null
   netWeight: number | null
+  estimatedWeight: number | null
   printCount: number
   lastPrintTime: string | null
 }
 
 const recordsData: WeightRecord[] = [
-  { id: 1, orderNo: '2608060012', date: '2026-08-06', area: '5栋发货', inTime: '13:26:18', outTime: '-', plateNumber: '粤ZYS56港', status: '待复称', fee: 50, grossWeight: 9890, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
-  { id: 2, orderNo: '2608060011', date: '2026-08-06', area: '5栋发货', inTime: '13:17:22', outTime: '-', plateNumber: '粤ZZD43港', status: '待复称', fee: 50, grossWeight: 20300, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
-  { id: 3, orderNo: '2608060010', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '13:14:35', outTime: '-', plateNumber: '粤L78872', status: '待复称', fee: 50, grossWeight: 15190, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
-  { id: 4, orderNo: '2608060008', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '12:58:19', outTime: '13:12:27', plateNumber: '粤L78872', status: '已打印', fee: 50, grossWeight: 15190, emptyWeight: 14410, netWeight: 780, printCount: 3, lastPrintTime: '2026-08-06 13:16:32' },
-  { id: 5, orderNo: '2608060009', date: '2026-08-06', area: '5栋发货', inTime: '12:59:17', outTime: '-', plateNumber: '粤BCS4856', status: '待复称', fee: 50, grossWeight: 4430, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
-  { id: 6, orderNo: '2608060005', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '11:56:06', outTime: '12:55:33', plateNumber: '粤L78872', status: '已打印', fee: 50, grossWeight: 14410, emptyWeight: 12690, netWeight: 1720, printCount: 2, lastPrintTime: '2026-08-06 12:58:14' },
-  { id: 7, orderNo: '2608060007', date: '2026-08-06', area: '5栋发货', inTime: '12:45:56', outTime: '-', plateNumber: '粤AC54673', status: '待复称', fee: 50, grossWeight: 3780, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
-  { id: 8, orderNo: '2608060006', date: '2026-08-06', area: '5栋发货', inTime: '12:31:52', outTime: '-', plateNumber: '粤BQG940', status: '待复称', fee: 50, grossWeight: 9300, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
-  { id: 9, orderNo: '2608060004', date: '2026-08-06', area: '5栋发货', inTime: '11:33:50', outTime: '-', plateNumber: '粤B55MW3', status: '待复称', fee: 50, grossWeight: 4110, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
-  { id: 10, orderNo: '2608060003', date: '2026-08-06', area: '5栋发货', inTime: '11:27:02', outTime: '-', plateNumber: '粤BMT611', status: '待复称', fee: 50, grossWeight: 10350, emptyWeight: 0, netWeight: 0, printCount: 0, lastPrintTime: null },
-  { id: 11, orderNo: '2608060002', date: '2026-08-06', area: '5栋发货', inTime: '09:56:06', outTime: '10:12:05', plateNumber: '粤BHQ324', status: '已打印', fee: 50, grossWeight: 14340, emptyWeight: 10880, netWeight: 3460, printCount: 1, lastPrintTime: '2026-08-06 10:13:00' },
-  { id: 12, orderNo: '2608060001', date: '2026-08-06', area: '5栋发货', inTime: '07:54:14', outTime: '08:56:16', plateNumber: '粤BDU730', status: '已打印', fee: 50, grossWeight: 10820, emptyWeight: 7810, netWeight: 3010, printCount: 1, lastPrintTime: '2026-08-06 08:57:20' },
-  { id: 13, orderNo: '2608050040', date: '2026-08-05', area: '5栋发货', inTime: '23:44:56', outTime: '23:58:58', plateNumber: '粤BGF010', status: '已打印', fee: 50, grossWeight: 9670, emptyWeight: 9630, netWeight: 40, printCount: 1, lastPrintTime: '2026-08-05 23:59:00' },
-  { id: 14, orderNo: '2608050039', date: '2026-08-05', area: '5栋发货', inTime: '21:36:17', outTime: '23:10:20', plateNumber: '粤BEC272', status: '已打印', fee: 50, grossWeight: 22630, emptyWeight: 16610, netWeight: 6020, printCount: 1, lastPrintTime: '2026-08-05 23:11:00' },
-  { id: 15, orderNo: '2608050038', date: '2026-08-05', area: '5栋发货', inTime: '20:23:20', outTime: '21:20:06', plateNumber: '粤ZZ80港', status: '已打印', fee: 50, grossWeight: 12560, emptyWeight: 10250, netWeight: 2310, printCount: 1, lastPrintTime: '2026-08-05 21:21:00' },
-  { id: 16, orderNo: '2608050034', date: '2026-08-05', area: '5栋发货', inTime: '19:12:04', outTime: '20:50:19', plateNumber: '粤ZYS56港', status: '已打印', fee: 50, grossWeight: 15190, emptyWeight: 13980, netWeight: 1210, printCount: 1, lastPrintTime: '2026-08-05 20:51:00' },
-  { id: 17, orderNo: '2608050037', date: '2026-08-05', area: '5栋发货', inTime: '20:21:03', outTime: '20:49:34', plateNumber: '粤BW861D', status: '已打印', fee: 50, grossWeight: 4870, emptyWeight: 3880, netWeight: 990, printCount: 1, lastPrintTime: '2026-08-05 20:50:00' },
-  { id: 18, orderNo: '2608050033', date: '2026-08-05', area: '5栋发货', inTime: '19:08:53', outTime: '20:44:57', plateNumber: '粤ZYN78港', status: '已打印', fee: 50, grossWeight: 10500, emptyWeight: 9970, netWeight: 530, printCount: 1, lastPrintTime: '2026-08-05 20:45:00' },
+  { id: 1, orderNo: '2608060012', date: '2026-08-06', area: '5栋发货', inTime: '13:26:18', outTime: '-', plateNumber: '粤ZYS56港', status: '待复称', fee: 50, grossWeight: 9890, emptyWeight: 0, netWeight: 0, estimatedWeight: 1200, printCount: 0, lastPrintTime: null },
+  { id: 2, orderNo: '2608060011', date: '2026-08-06', area: '5栋发货', inTime: '13:17:22', outTime: '-', plateNumber: '粤ZZD43港', status: '待复称', fee: 50, grossWeight: 20300, emptyWeight: 0, netWeight: 0, estimatedWeight: 20000, printCount: 0, lastPrintTime: null },
+  { id: 3, orderNo: '2608060010', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '13:14:35', outTime: '-', plateNumber: '粤L78872', status: '待复称', fee: 50, grossWeight: 15190, emptyWeight: 0, netWeight: 0, estimatedWeight: 15000, printCount: 0, lastPrintTime: null },
+  { id: 4, orderNo: '2608060008', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '12:58:19', outTime: '13:12:27', plateNumber: '粤L78872', status: '已打印', fee: 50, grossWeight: 15190, emptyWeight: 14410, netWeight: 780, estimatedWeight: 15000, printCount: 3, lastPrintTime: '2026-08-06 13:16:32' },
+  { id: 5, orderNo: '2608060009', date: '2026-08-06', area: '5栋发货', inTime: '12:59:17', outTime: '-', plateNumber: '粤BCS4856', status: '待复称', fee: 50, grossWeight: 4430, emptyWeight: 0, netWeight: 0, estimatedWeight: 4500, printCount: 0, lastPrintTime: null },
+  { id: 6, orderNo: '2608060005', date: '2026-08-06', area: '3栋昕诺飞...', inTime: '11:56:06', outTime: '12:55:33', plateNumber: '粤L78872', status: '已打印', fee: 50, grossWeight: 14410, emptyWeight: 12690, netWeight: 1720, estimatedWeight: 15000, printCount: 2, lastPrintTime: '2026-08-06 12:58:14' },
+  { id: 7, orderNo: '2608060007', date: '2026-08-06', area: '5栋发货', inTime: '12:45:56', outTime: '-', plateNumber: '粤AC54673', status: '待复称', fee: 50, grossWeight: 3780, emptyWeight: 0, netWeight: 0, estimatedWeight: 3800, printCount: 0, lastPrintTime: null },
+  { id: 8, orderNo: '2608060006', date: '2026-08-06', area: '5栋发货', inTime: '12:31:52', outTime: '-', plateNumber: '粤BQG940', status: '待复称', fee: 50, grossWeight: 9300, emptyWeight: 0, netWeight: 0, estimatedWeight: 9500, printCount: 0, lastPrintTime: null },
+  { id: 9, orderNo: '2608060004', date: '2026-08-06', area: '5栋发货', inTime: '11:33:50', outTime: '-', plateNumber: '粤B55MW3', status: '待复称', fee: 50, grossWeight: 4110, emptyWeight: 0, netWeight: 0, estimatedWeight: 4000, printCount: 0, lastPrintTime: null },
+  { id: 10, orderNo: '2608060003', date: '2026-08-06', area: '5栋发货', inTime: '11:27:02', outTime: '-', plateNumber: '粤BMT611', status: '待复称', fee: 50, grossWeight: 10350, emptyWeight: 0, netWeight: 0, estimatedWeight: 10500, printCount: 0, lastPrintTime: null },
+  { id: 11, orderNo: '2608060002', date: '2026-08-06', area: '5栋发货', inTime: '09:56:06', outTime: '10:12:05', plateNumber: '粤BHQ324', status: '已打印', fee: 50, grossWeight: 14340, emptyWeight: 10880, netWeight: 3460, estimatedWeight: 3500, printCount: 1, lastPrintTime: '2026-08-06 10:13:00' },
+  { id: 12, orderNo: '2608060001', date: '2026-08-06', area: '5栋发货', inTime: '07:54:14', outTime: '08:56:16', plateNumber: '粤BDU730', status: '已打印', fee: 50, grossWeight: 10820, emptyWeight: 7810, netWeight: 3010, estimatedWeight: 3000, printCount: 1, lastPrintTime: '2026-08-06 08:57:20' },
+  { id: 13, orderNo: '2608050040', date: '2026-08-05', area: '5栋发货', inTime: '23:44:56', outTime: '23:58:58', plateNumber: '粤BGF010', status: '已打印', fee: 50, grossWeight: 9670, emptyWeight: 9630, netWeight: 40, estimatedWeight: 100, printCount: 1, lastPrintTime: '2026-08-05 23:59:00' },
+  { id: 14, orderNo: '2608050039', date: '2026-08-05', area: '5栋发货', inTime: '21:36:17', outTime: '23:10:20', plateNumber: '粤BEC272', status: '已打印', fee: 50, grossWeight: 22630, emptyWeight: 16610, netWeight: 6020, estimatedWeight: 6000, printCount: 1, lastPrintTime: '2026-08-05 23:11:00' },
+  { id: 15, orderNo: '2608050038', date: '2026-08-05', area: '5栋发货', inTime: '20:23:20', outTime: '21:20:06', plateNumber: '粤ZZ80港', status: '已打印', fee: 50, grossWeight: 12560, emptyWeight: 10250, netWeight: 2310, estimatedWeight: 2300, printCount: 1, lastPrintTime: '2026-08-05 21:21:00' },
+  { id: 16, orderNo: '2608050034', date: '2026-08-05', area: '5栋发货', inTime: '19:12:04', outTime: '20:50:19', plateNumber: '粤ZYS56港', status: '已打印', fee: 50, grossWeight: 15190, emptyWeight: 13980, netWeight: 1210, estimatedWeight: 1200, printCount: 1, lastPrintTime: '2026-08-05 20:51:00' },
+  { id: 17, orderNo: '2608050037', date: '2026-08-05', area: '5栋发货', inTime: '20:21:03', outTime: '20:49:34', plateNumber: '粤BW861D', status: '已打印', fee: 50, grossWeight: 4870, emptyWeight: 3880, netWeight: 990, estimatedWeight: 990, printCount: 1, lastPrintTime: '2026-08-05 20:50:00' },
+  { id: 18, orderNo: '2608050033', date: '2026-08-05', area: '5栋发货', inTime: '19:08:53', outTime: '20:44:57', plateNumber: '粤ZYN78港', status: '已打印', fee: 50, grossWeight: 10500, emptyWeight: 9970, netWeight: 530, estimatedWeight: 500, printCount: 1, lastPrintTime: '2026-08-05 20:45:00' },
 ]
 
 export default function Records() {
@@ -122,7 +123,7 @@ export default function Records() {
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1400px]">
+          <table className="w-full min-w-[1500px]">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50">
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">序号</th>
@@ -158,6 +159,9 @@ export default function Records() {
                   <div className="flex items-center gap-1">净重<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">预估重量<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
                   <div className="flex items-center gap-1">打印次数<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
@@ -185,6 +189,7 @@ export default function Records() {
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.grossWeight?.toLocaleString() ?? '-'}</td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.emptyWeight ?? '-'}</td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.netWeight ?? '-'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.estimatedWeight?.toLocaleString() ?? '-'}</td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.printCount}</td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.lastPrintTime ?? '-'}</td>
                   <td className="px-4 py-3 text-sm whitespace-nowrap">

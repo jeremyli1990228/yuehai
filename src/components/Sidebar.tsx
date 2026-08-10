@@ -11,7 +11,8 @@ import {
   FileText,
   Printer,
   BarChart3,
-  ClipboardList
+  ClipboardList,
+  Scale as ScaleIcon
 } from 'lucide-react'
 
 interface MenuItem {
@@ -33,6 +34,7 @@ const menuItems: MenuItem[] = [
     children: [
       { title: '称重看板', path: '/dashboard' },
       { title: '称重配置', path: '/configuration' },
+      { title: '预计重量', path: '/estimated-weight' },
       { title: '打印申请', path: '/print-application' },
       { title: '称重汇总', path: '/summary' },
       { title: '称重记录', path: '/records' },
@@ -61,6 +63,7 @@ export default function Sidebar() {
     switch (title) {
       case '称重看板': return <BarChart3 size={16} />
       case '称重配置': return <Settings size={16} />
+      case '预计重量': return <ScaleIcon size={16} />
       case '打印申请': return <Printer size={16} />
       case '称重汇总': return <FileText size={16} />
       case '称重记录': return <ClipboardList size={16} />

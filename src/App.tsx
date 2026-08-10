@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import Configuration from './pages/Configuration'
+import EstimatedWeight from './pages/EstimatedWeight'
 import PrintApplication from './pages/PrintApplication'
 import Summary from './pages/Summary'
 import Records from './pages/Records'
@@ -15,6 +16,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="configuration" element={<Configuration />} />
+          <Route path="estimated-weight" element={<EstimatedWeight />} />
           <Route path="print-application" element={<PrintApplication />} />
           <Route path="summary" element={<Summary />} />
           <Route path="records" element={<Records />} />
