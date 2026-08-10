@@ -103,7 +103,6 @@ export default function Configuration() {
                 onChange={(e) => setToleranceRange(e.target.value.replace(/[^0-9.]/g, ''))}
                 className="border border-gray-300 rounded px-3 py-1.5 text-sm w-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-600">kg</span>
             </div>
           </div>
         </div>
