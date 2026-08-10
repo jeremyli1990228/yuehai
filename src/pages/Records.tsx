@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Search, RefreshCw, Download, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Search, RefreshCw, Download, Upload, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface WeightRecord {
   id: number
@@ -44,6 +44,8 @@ export default function Records() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
   const total = 26578
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
 
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -54,6 +56,57 @@ export default function Records() {
       default:
         return 'bg-gray-50 text-gray-600 border border-gray-200'
     }
+  }
+
+  const handleExport = () => {
+    const headers = ['序号', '单号', '日期', '到访区域', '入厂时间', '出厂时间', '车牌号', '状态', '收费', '总重', '空重', '净重', '预估重量', '打印次数', '最后一次打印时间']
+    const csvContent = [
+      headers.join(','),
+      ...recordsData.map((row) =>
+        [row.id, row.orderNo, row.date, row.area, row.inTime, row.outTime, row.plateNumber, row.status, row.fee, row.grossWeight ?? '', row.emptyWeight ?? '', row.netWeight ?? '', row.estimatedWeight ?? '', row.printCount, row.lastPrintTime ?? ''].join(',')
+      ),
+    ].join('\n')
+    const BOM = '\uFEFF'
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `称重记录_${new Date().toISOString().slice(0, 10)}.csv`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    setMessage({ type: 'success', text: `成功导出 ${recordsData.length} 条数据` })
+    setTimeout(() => setMessage(null), 3000)
+  }
+
+  const handleImport = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const text = (event.target?.result as string) || ''
+        const cleanText = text.replace(/^\uFEFF/, '')
+        const lines = cleanText.split(/\r?\n/).filter(line => line.trim())
+        if (lines.length <= 1) {
+          setMessage({ type: 'error', text: '文件内容为空或格式不正确' })
+          setTimeout(() => setMessage(null), 3000)
+          return
+        }
+        setMessage({ type: 'success', text: `成功导入 ${lines.length - 1} 条数据` })
+        setTimeout(() => setMessage(null), 3000)
+      } catch {
+        setMessage({ type: 'error', text: '文件解析失败，请检查文件格式' })
+        setTimeout(() => setMessage(null), 3000)
+      }
+    }
+    reader.readAsText(file, 'UTF-8')
+    e.target.value = ''
   }
 
   return (
@@ -112,13 +165,36 @@ export default function Records() {
               <RefreshCw size={14} />
               <span>重置</span>
             </button>
-            <button className="px-4 py-1.5 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors flex items-center gap-1">
+            <button
+              onClick={handleImport}
+              className="px-4 py-1.5 bg-white border border-gray-300 text-gray-600 rounded text-sm hover:bg-gray-50 transition-colors flex items-center gap-1"
+            >
+              <Upload size={14} />
+              <span>导入</span>
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-4 py-1.5 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors flex items-center gap-1"
+            >
               <Download size={14} />
               <span>导出</span>
             </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </div>
         </div>
       </div>
+
+      {message && (
+        <div className={`rounded-lg border px-4 py-3 mb-4 text-sm ${message.type === 'error' ? 'bg-red-50 border-red-200 text-red-600' : 'bg-green-50 border-green-200 text-green-600'}`}>
+          {message.text}
+        </div>
+      )}
 
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">

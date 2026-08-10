@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Search, RefreshCw, Plus, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Search, RefreshCw, Plus, X, ChevronLeft, ChevronRight, Upload, Download } from 'lucide-react'
 
 interface EstimatedWeightRecord {
   id: number
@@ -40,6 +40,7 @@ export default function EstimatedWeight() {
   const [formEstimatedWeight, setFormEstimatedWeight] = useState('')
   const [dataList, setDataList] = useState<EstimatedWeightRecord[]>(mockData)
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -102,6 +103,90 @@ export default function EstimatedWeight() {
       ])
     }
     setModalOpen(false)
+  }
+
+  const handleExport = () => {
+    if (filteredList.length === 0) {
+      setMessage({ type: 'error', text: '暂无数据可导出' })
+      setTimeout(() => setMessage(null), 3000)
+      return
+    }
+    const headers = ['序号', '单号', '车牌号', '预估重量', '状态', '提交时间']
+    const csvContent = [
+      headers.join(','),
+      ...filteredList.map((row, idx) =>
+        [idx + 1, row.orderNo, row.plateNumber, row.estimatedWeight, row.status, row.submitTime].join(',')
+      ),
+    ].join('\n')
+    const BOM = '\uFEFF'
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `预计重量_${new Date().toISOString().slice(0, 10)}.csv`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    setMessage({ type: 'success', text: `成功导出 ${filteredList.length} 条数据` })
+    setTimeout(() => setMessage(null), 3000)
+  }
+
+  const handleImport = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const text = (event.target?.result as string) || ''
+        const cleanText = text.replace(/^\uFEFF/, '')
+        const lines = cleanText.split(/\r?\n/).filter(line => line.trim())
+        if (lines.length <= 1) {
+          setMessage({ type: 'error', text: '文件内容为空或格式不正确' })
+          setTimeout(() => setMessage(null), 3000)
+          return
+        }
+        const dataLines = lines.slice(1)
+        const importedRecords: EstimatedWeightRecord[] = []
+        for (const line of dataLines) {
+          const cols = line.split(',')
+          if (cols.length < 5) continue
+          const plateNumber = cols[2]?.trim()
+          const estimatedWeight = Number(cols[3])
+          const status = (cols[4]?.trim() as '已核验' | '未核验') || '未核验'
+          if (!plateNumber || isNaN(estimatedWeight)) continue
+          const newId = Math.max(...dataList.map(d => d.id), 0, ...importedRecords.map(d => d.id), 0) + importedRecords.length + 1
+          const now = new Date()
+          const pad = (n: number) => String(n).padStart(2, '0')
+          const submitTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+          importedRecords.push({
+            id: newId,
+            orderNo: `EW${now.getFullYear().toString().slice(-2)}${pad(now.getMonth() + 1)}${pad(now.getDate())}${String(newId).padStart(3, '0')}`,
+            plateNumber,
+            estimatedWeight,
+            status: status === '已核验' ? '已核验' : '未核验',
+            submitTime,
+          })
+        }
+        if (importedRecords.length === 0) {
+          setMessage({ type: 'error', text: '未解析到有效数据' })
+          setTimeout(() => setMessage(null), 3000)
+          return
+        }
+        setDataList(prev => [...importedRecords, ...prev])
+        setMessage({ type: 'success', text: `成功导入 ${importedRecords.length} 条数据` })
+        setTimeout(() => setMessage(null), 3000)
+      } catch {
+        setMessage({ type: 'error', text: '文件解析失败，请检查文件格式' })
+        setTimeout(() => setMessage(null), 3000)
+      }
+    }
+    reader.readAsText(file, 'UTF-8')
+    e.target.value = ''
   }
 
   const filteredList = dataList.filter(item => {
@@ -184,6 +269,27 @@ export default function EstimatedWeight() {
               <RefreshCw size={14} />
               <span>重置</span>
             </button>
+            <button
+              onClick={handleImport}
+              className="px-4 py-1.5 bg-white border border-gray-300 text-gray-600 rounded text-sm hover:bg-gray-50 transition-colors flex items-center gap-1"
+            >
+              <Upload size={14} />
+              <span>导入</span>
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-4 py-1.5 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors flex items-center gap-1"
+            >
+              <Download size={14} />
+              <span>导出</span>
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </div>
         </div>
       </div>
