@@ -37,6 +37,7 @@ export default function EstimatedWeight() {
   const [formPlateNumber, setFormPlateNumber] = useState('')
   const [formEstimatedWeight, setFormEstimatedWeight] = useState('')
   const [dataList, setDataList] = useState<EstimatedWeightRecord[]>(mockData)
+  const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
 
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -57,6 +58,11 @@ export default function EstimatedWeight() {
   }
 
   const handleEdit = (record: EstimatedWeightRecord) => {
+    if (record.status === '已核验') {
+      setMessage({ type: 'error', text: '该记录已核验，无法编辑' })
+      setTimeout(() => setMessage(null), 3000)
+      return
+    }
     setEditingRecord(record)
     setFormPlateNumber(record.plateNumber)
     setFormEstimatedWeight(String(record.estimatedWeight))
@@ -156,6 +162,12 @@ export default function EstimatedWeight() {
         </div>
       </div>
 
+      {message && (
+        <div className={`rounded-lg border px-4 py-3 mb-4 text-sm ${message.type === 'error' ? 'bg-red-50 border-red-200 text-red-600' : 'bg-green-50 border-green-200 text-green-600'}`}>
+          {message.text}
+        </div>
+      )}
+
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="overflow-x-auto">
@@ -197,7 +209,7 @@ export default function EstimatedWeight() {
                   <td className="px-4 py-3 text-sm whitespace-nowrap">
                     <button
                       onClick={() => handleEdit(row)}
-                      className="text-blue-500 hover:text-blue-600 text-sm"
+                      className={`text-sm ${row.status === '已核验' ? 'text-gray-300 cursor-not-allowed' : 'text-blue-500 hover:text-blue-600'}`}
                     >
                       编辑
                     </button>
