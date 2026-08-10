@@ -31,6 +31,8 @@ export default function EstimatedWeight() {
   const [total] = useState(156)
   const [plateFilter, setPlateFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
   const [modalOpen, setModalOpen] = useState(false)
   const [editingRecord, setEditingRecord] = useState<EstimatedWeightRecord | null>(null)
@@ -105,6 +107,14 @@ export default function EstimatedWeight() {
   const filteredList = dataList.filter(item => {
     if (plateFilter && !item.plateNumber.includes(plateFilter.trim())) return false
     if (statusFilter && item.status !== statusFilter) return false
+    if (startDate) {
+      const itemDate = item.submitTime.substring(0, 10)
+      if (itemDate < startDate) return false
+    }
+    if (endDate) {
+      const itemDate = item.submitTime.substring(0, 10)
+      if (itemDate > endDate) return false
+    }
     return true
   })
 
@@ -146,13 +156,29 @@ export default function EstimatedWeight() {
               <option value="未核验">未核验</option>
             </select>
           </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">提交时间</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <span className="text-sm text-gray-400">至</span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1.5 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
           <div className="flex-1 flex justify-end gap-2">
             <button className="px-4 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors flex items-center gap-1">
               <Search size={14} />
               <span>查询</span>
             </button>
             <button
-              onClick={() => { setPlateFilter(''); setStatusFilter('') }}
+              onClick={() => { setPlateFilter(''); setStatusFilter(''); setStartDate(''); setEndDate('') }}
               className="px-4 py-1.5 bg-white border border-gray-300 text-gray-600 rounded text-sm hover:bg-gray-50 transition-colors flex items-center gap-1"
             >
               <RefreshCw size={14} />
