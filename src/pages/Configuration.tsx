@@ -169,6 +169,17 @@ export default function Configuration() {
                   />
                   <span className="text-sm text-gray-700">出行时间后下发（需先审批通过）</span>
                 </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="permissionDelivery"
+                    value="approval_within_tolerance"
+                    checked={permissionDelivery === 'approval_within_tolerance'}
+                    onChange={() => setPermissionDelivery('approval_within_tolerance')}
+                    className="w-4 h-4 text-blue-600 accent-blue-600"
+                  />
+                  <span className="text-sm text-gray-700">审核通过且未超出差值范围</span>
+                </label>
               </div>
             </div>
           </div>
