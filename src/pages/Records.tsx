@@ -342,7 +342,10 @@ export default function Records() {
 
       {/* Print Confirm Modal */}
       {printModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
+        <div
+          className="fixed inset-0 flex items-center justify-center z-[9999]"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}
+        >
           <div className="bg-white rounded-lg shadow-2xl w-[420px] overflow-hidden">
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">

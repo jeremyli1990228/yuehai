@@ -391,7 +391,8 @@ export default function EstimatedWeight() {
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
             onClick={() => setModalOpen(false)}
           />
           <div className="relative bg-white rounded-lg shadow-lg w-[480px] max-w-[90vw]">
