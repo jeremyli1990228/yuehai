@@ -1,33 +1,43 @@
 import { useState } from 'react'
-import { Search, RefreshCw, Download, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, RefreshCw, Download, ChevronLeft, ChevronRight, X } from 'lucide-react'
 
 interface PrintRecord {
   id: number
   applyTime: string
   plateNumber: string
+  phoneNumber: string
   orderNumber: string
   reason: string
   status: string
 }
 
 const mockData: PrintRecord[] = [
-  { id: 1, applyTime: '2025-04-20 17:18:39', plateNumber: '粤BCH7899', orderNumber: '2503240011', reason: '1', status: '已打印' },
-  { id: 2, applyTime: '2025-04-11 11:57:16', plateNumber: '粤BCH7899', orderNumber: '2503240011', reason: '1', status: '已打印' },
-  { id: 3, applyTime: '2025-04-11 11:14:47', plateNumber: '粤BCH7899', orderNumber: '2503240011', reason: '1', status: '已打印' },
-  { id: 4, applyTime: '2025-04-11 11:12:20', plateNumber: '粤BCH7899', orderNumber: '2503240011', reason: '1', status: '已打印' },
-  { id: 5, applyTime: '2025-04-11 11:11:35', plateNumber: '粤BCH7899', orderNumber: '2503240011', reason: '测试', status: '已打印' },
-  { id: 6, applyTime: '2025-04-03 11:45:45', plateNumber: '粤BCH7899', orderNumber: '2503240011', reason: '测试', status: '已打印' },
-  { id: 7, applyTime: '2025-04-03 11:44:59', plateNumber: '粤BCH7899', orderNumber: '2503240011', reason: '测试', status: '已打印' },
-  { id: 8, applyTime: '2025-03-25 14:56:06', plateNumber: '粤BCH7899', orderNumber: '2503170016', reason: '1', status: '已打印' },
-  { id: 9, applyTime: '2025-03-24 11:36:39', plateNumber: '粤BCH7899', orderNumber: '2503240006', reason: '测试', status: '已打印' },
-  { id: 10, applyTime: '2025-03-24 11:36:08', plateNumber: '粤BCH7899', orderNumber: '2503240006', reason: '测试', status: '已打印' },
-  { id: 11, applyTime: '2025-03-12 12:00:50', plateNumber: '粤BCH7899', orderNumber: '2503120008', reason: '测试', status: '已打印' },
+  { id: 1, applyTime: '2025-04-20 17:18:39', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240011', reason: '1', status: '已打印' },
+  { id: 2, applyTime: '2025-04-11 11:57:16', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240011', reason: '1', status: '已打印' },
+  { id: 3, applyTime: '2025-04-11 11:14:47', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240011', reason: '1', status: '已打印' },
+  { id: 4, applyTime: '2025-04-11 11:12:20', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240011', reason: '1', status: '已打印' },
+  { id: 5, applyTime: '2025-04-11 11:11:35', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240011', reason: '测试', status: '已打印' },
+  { id: 6, applyTime: '2025-04-03 11:45:45', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240011', reason: '测试', status: '已打印' },
+  { id: 7, applyTime: '2025-04-03 11:44:59', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240011', reason: '测试', status: '已打印' },
+  { id: 8, applyTime: '2025-03-25 14:56:06', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503170016', reason: '1', status: '已打印' },
+  { id: 9, applyTime: '2025-03-24 11:36:39', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240006', reason: '测试', status: '已打印' },
+  { id: 10, applyTime: '2025-03-24 11:36:08', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503240006', reason: '测试', status: '已打印' },
+  { id: 11, applyTime: '2025-03-12 12:00:50', plateNumber: '粤BCH7899', phoneNumber: '18676722791', orderNumber: '2503120008', reason: '测试', status: '已打印' },
 ]
 
 export default function PrintApplication() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
+  const [detailOpen, setDetailOpen] = useState(false)
+  const [currentRecord, setCurrentRecord] = useState<PrintRecord | null>(null)
+  const [activeTab, setActiveTab] = useState<'apply' | 'approval'>('apply')
   const total = mockData.length
+
+  const handleViewDetail = (record: PrintRecord) => {
+    setCurrentRecord(record)
+    setActiveTab('apply')
+    setDetailOpen(true)
+  }
 
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -163,7 +173,12 @@ export default function PrintApplication() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm">
-                    <button className="text-blue-500 hover:text-blue-600 text-sm">详情</button>
+                    <button
+                      onClick={() => handleViewDetail(row)}
+                      className="text-blue-500 hover:text-blue-600 text-sm"
+                    >
+                      详情
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -196,6 +211,128 @@ export default function PrintApplication() {
           </div>
         </div>
       </div>
+
+      {/* Detail Modal */}
+      {detailOpen && currentRecord && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl w-[560px] max-h-[90vh] overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-800">详情</h2>
+              <button
+                onClick={() => setDetailOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Tabs */}
+            <div className="px-6 border-b border-gray-200">
+              <div className="flex gap-6">
+                <button
+                  onClick={() => setActiveTab('apply')}
+                  className={`py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                    activeTab === 'apply'
+                      ? 'text-blue-600 border-blue-600'
+                      : 'text-gray-500 border-transparent hover:text-gray-700'
+                  }`}
+                >
+                  申请信息
+                </button>
+                <button
+                  onClick={() => setActiveTab('approval')}
+                  className={`py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                    activeTab === 'approval'
+                      ? 'text-blue-600 border-blue-600'
+                      : 'text-gray-500 border-transparent hover:text-gray-700'
+                  }`}
+                >
+                  审批信息
+                </button>
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            <div className="px-6 py-4">
+              {activeTab === 'apply' ? (
+                <div className="border border-gray-200 rounded">
+                  <div className="grid grid-cols-1 divide-y divide-gray-200">
+                    <div className="flex">
+                      <div className="w-28 px-4 py-3 bg-gray-50 text-sm text-gray-600 flex items-center justify-end">
+                        车牌号
+                      </div>
+                      <div className="flex-1 px-4 py-3 text-sm text-gray-800">
+                        {currentRecord.plateNumber}
+                      </div>
+                    </div>
+                    <div className="flex">
+                      <div className="w-28 px-4 py-3 bg-gray-50 text-sm text-gray-600 flex items-center justify-end">
+                        手机号
+                      </div>
+                      <div className="flex-1 px-4 py-3 text-sm text-gray-800">
+                        {currentRecord.phoneNumber}
+                      </div>
+                    </div>
+                    <div className="flex">
+                      <div className="w-28 px-4 py-3 bg-gray-50 text-sm text-gray-600 flex items-center justify-end">
+                        申请时间
+                      </div>
+                      <div className="flex-1 px-4 py-3 text-sm text-gray-800">
+                        {currentRecord.applyTime}
+                      </div>
+                    </div>
+                    <div className="flex">
+                      <div className="w-28 px-4 py-3 bg-gray-50 text-sm text-gray-600 flex items-center justify-end">
+                        状态
+                      </div>
+                      <div className="flex-1 px-4 py-3">
+                        <span className={`px-2 py-1 rounded text-xs ${getStatusClass(currentRecord.status)}`}>
+                          {currentRecord.status}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex">
+                      <div className="w-28 px-4 py-3 bg-gray-50 text-sm text-gray-600 flex items-center justify-end">
+                        申请原因
+                      </div>
+                      <div className="flex-1 px-4 py-3 text-sm text-gray-800">
+                        {currentRecord.reason}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="py-4">
+                  <div className="relative pl-8">
+                    {/* Timeline */}
+                    <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-300" style={{ left: '11px' }}></div>
+
+                    {/* Step 1: 已发起 */}
+                    <div className="relative mb-8">
+                      <div className="absolute -left-8 w-6 h-6 rounded-full bg-cyan-50 text-cyan-600 border border-cyan-200 flex items-center justify-center text-xs font-medium">
+                        已发起
+                      </div>
+                      <div className="pt-1">
+                        <div className="text-sm text-gray-500 mb-1">{currentRecord.phoneNumber}</div>
+                        <div className="text-sm text-gray-600">发起</div>
+                      </div>
+                    </div>
+
+                    {/* Step 2: 已结束 */}
+                    <div className="relative">
+                      <div className="absolute -left-8 w-6 h-6 rounded-full bg-cyan-50 text-cyan-600 border border-cyan-200 flex items-center justify-center text-xs font-medium">
+                        已结束
+                      </div>
+                      <div className="pt-1"></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

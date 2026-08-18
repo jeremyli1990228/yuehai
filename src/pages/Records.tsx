@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Search, RefreshCw, Download, Upload, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, RefreshCw, Download, Upload, ChevronLeft, ChevronRight, X, AlertCircle } from 'lucide-react'
 
 interface WeightRecord {
   id: number
@@ -43,9 +43,23 @@ const recordsData: WeightRecord[] = [
 export default function Records() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
+  const [printModalOpen, setPrintModalOpen] = useState(false)
+  const [currentPrintRecord, setCurrentPrintRecord] = useState<WeightRecord | null>(null)
   const total = 26578
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
+
+  const handlePrintClick = (record: WeightRecord) => {
+    setCurrentPrintRecord(record)
+    setPrintModalOpen(true)
+  }
+
+  const handlePrintConfirm = () => {
+    // TODO: 实际打印逻辑
+    setMessage({ type: 'success', text: `单号 ${currentPrintRecord?.orderNo} 打印成功` })
+    setTimeout(() => setMessage(null), 3000)
+    setPrintModalOpen(false)
+  }
 
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -282,7 +296,12 @@ export default function Records() {
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.printCount}</td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.lastPrintTime ?? '-'}</td>
                   <td className="px-4 py-3 text-sm whitespace-nowrap">
-                    <button className="text-blue-500 hover:text-blue-600 text-sm">打印</button>
+                    <button
+                      onClick={() => handlePrintClick(row)}
+                      className="text-blue-500 hover:text-blue-600 text-sm"
+                    >
+                      打印
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -320,6 +339,51 @@ export default function Records() {
           </div>
         </div>
       </div>
+
+      {/* Print Confirm Modal */}
+      {printModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl w-[420px] overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h2 className="text-base font-medium text-gray-800">提示</h2>
+              <button
+                onClick={() => setPrintModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="px-6 py-8">
+              <div className="flex flex-col items-center text-center">
+                {/* Alert Icon */}
+                <div className="w-14 h-14 rounded-full bg-red-50 border border-red-100 flex items-center justify-center mb-4">
+                  <AlertCircle size={32} className="text-red-400" strokeWidth={2} />
+                </div>
+                <p className="text-sm text-gray-600">请确认是否打印？</p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100">
+              <button
+                onClick={() => setPrintModalOpen(false)}
+                className="px-5 py-1.5 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={handlePrintConfirm}
+                className="px-5 py-1.5 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
