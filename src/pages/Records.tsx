@@ -59,12 +59,13 @@ export default function Records() {
   }
 
   const handleExport = () => {
-    const headers = ['序号', '单号', '日期', '到访区域', '入厂时间', '出厂时间', '车牌号', '状态', '收费', '总重', '空重', '净重', '预估重量', '打印次数', '最后一次打印时间']
+    const headers = ['序号', '单号', '日期', '到访区域', '入厂时间', '出厂时间', '车牌号', '状态', '收费', '总重', '空重', '净重', '预估重量', '差值', '打印次数', '最后一次打印时间']
     const csvContent = [
       headers.join(','),
-      ...recordsData.map((row) =>
-        [row.id, row.orderNo, row.date, row.area, row.inTime, row.outTime, row.plateNumber, row.status, row.fee, row.grossWeight ?? '', row.emptyWeight ?? '', row.netWeight ?? '', row.estimatedWeight ?? '', row.printCount, row.lastPrintTime ?? ''].join(',')
-      ),
+      ...recordsData.map((row) => {
+        const diff = (row.netWeight != null && row.estimatedWeight != null) ? row.netWeight - row.estimatedWeight : ''
+        return [row.id, row.orderNo, row.date, row.area, row.inTime, row.outTime, row.plateNumber, row.status, row.fee, row.grossWeight ?? '', row.emptyWeight ?? '', row.netWeight ?? '', row.estimatedWeight ?? '', diff, row.printCount, row.lastPrintTime ?? ''].join(',')
+      }),
     ].join('\n')
     const BOM = '\uFEFF'
     const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' })
@@ -199,7 +200,7 @@ export default function Records() {
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1500px]">
+          <table className="w-full min-w-[1600px]">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50">
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">序号</th>
@@ -238,6 +239,9 @@ export default function Records() {
                   <div className="flex items-center gap-1">预估重量<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
+                  <div className="flex items-center gap-1">差值<span className="text-gray-400 text-xs">⇅</span></div>
+                </th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
                   <div className="flex items-center gap-1">打印次数<span className="text-gray-400 text-xs">⇅</span></div>
                 </th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-600 whitespace-nowrap">
@@ -266,6 +270,15 @@ export default function Records() {
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.emptyWeight ?? '-'}</td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.netWeight ?? '-'}</td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.estimatedWeight?.toLocaleString() ?? '-'}</td>
+                  <td className="px-4 py-3 text-sm whitespace-nowrap">
+                    {(() => {
+                      if (row.netWeight == null || row.estimatedWeight == null) return <span className="text-gray-600">-</span>
+                      const diff = row.netWeight - row.estimatedWeight
+                      const colorClass = diff > 0 ? 'text-red-500' : diff < 0 ? 'text-green-500' : 'text-gray-600'
+                      const prefix = diff > 0 ? '+' : ''
+                      return <span className={colorClass}>{prefix}{diff.toLocaleString()}</span>
+                    })()}
+                  </td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.printCount}</td>
                   <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{row.lastPrintTime ?? '-'}</td>
                   <td className="px-4 py-3 text-sm whitespace-nowrap">
